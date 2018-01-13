@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.ToolBar = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.新建ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.開啟ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,7 +51,8 @@
             this.使用手冊ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.關於本程式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.回報BugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.sourceCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DebugMode_ = new System.Windows.Forms.ToolStripButton();
             this.label1 = new System.Windows.Forms.Label();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -60,16 +61,15 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
             this.dateSelecter1 = new 時刻表.DateSelecter();
-            this.sourceCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip1.SuspendLayout();
+            this.ToolBar.SuspendLayout();
             this.SuspendLayout();
             // 
-            // toolStrip1
+            // ToolBar
             // 
-            this.toolStrip1.BackColor = System.Drawing.Color.White;
-            this.toolStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolBar.BackColor = System.Drawing.Color.White;
+            this.ToolBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ToolBar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.ToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1,
             this.toolStripSeparator1,
             this.toolStripButton2,
@@ -79,14 +79,14 @@
             this.toolStripButton3,
             this.toolStripSeparator3,
             this.toolStripDropDownButton2,
-            this.toolStripButton5});
-            this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(698, 23);
-            this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Text = "toolStrip1";
+            this.DebugMode_});
+            this.ToolBar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.ToolBar.Location = new System.Drawing.Point(0, 0);
+            this.ToolBar.Name = "ToolBar";
+            this.ToolBar.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.ToolBar.Size = new System.Drawing.Size(698, 23);
+            this.ToolBar.TabIndex = 0;
+            this.ToolBar.Text = "toolStrip1";
             // 
             // toolStripDropDownButton1
             // 
@@ -271,17 +271,24 @@
             this.回報BugToolStripMenuItem.Visible = false;
             this.回報BugToolStripMenuItem.Click += new System.EventHandler(this.回報BugToolStripMenuItem_Click);
             // 
-            // toolStripButton5
+            // sourceCodeToolStripMenuItem
             // 
-            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton5.ForeColor = System.Drawing.Color.Black;
-            this.toolStripButton5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton5.Image")));
-            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton5.Name = "toolStripButton5";
-            this.toolStripButton5.Size = new System.Drawing.Size(56, 19);
-            this.toolStripButton5.Text = "DEBUG!";
-            this.toolStripButton5.Visible = false;
-            this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
+            this.sourceCodeToolStripMenuItem.Name = "sourceCodeToolStripMenuItem";
+            this.sourceCodeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.sourceCodeToolStripMenuItem.Text = "Source Code";
+            this.sourceCodeToolStripMenuItem.Click += new System.EventHandler(this.sourceCodeToolStripMenuItem_Click);
+            // 
+            // DebugMode_
+            // 
+            this.DebugMode_.BackColor = System.Drawing.Color.Red;
+            this.DebugMode_.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.DebugMode_.ForeColor = System.Drawing.Color.Black;
+            this.DebugMode_.Image = ((System.Drawing.Image)(resources.GetObject("DebugMode_.Image")));
+            this.DebugMode_.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.DebugMode_.Name = "DebugMode_";
+            this.DebugMode_.Size = new System.Drawing.Size(93, 19);
+            this.DebugMode_.Text = "DEBUG Mode ";
+            this.DebugMode_.Click += new System.EventHandler(this.toolStripButton5_Click);
             // 
             // label1
             // 
@@ -334,6 +341,7 @@
             // 
             // monthCalendar1
             // 
+            this.monthCalendar1.BackColor = System.Drawing.SystemColors.Control;
             this.monthCalendar1.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.monthCalendar1.Location = new System.Drawing.Point(132, 51);
             this.monthCalendar1.Name = "monthCalendar1";
@@ -359,13 +367,6 @@
             this.dateSelecter1.DownButtonClick += new 時刻表.DateSelecter.Down(this.dateSelecter1_DownButtonClick);
             this.dateSelecter1.Load += new System.EventHandler(this.dateSelecter1_Load);
             // 
-            // sourceCodeToolStripMenuItem
-            // 
-            this.sourceCodeToolStripMenuItem.Name = "sourceCodeToolStripMenuItem";
-            this.sourceCodeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.sourceCodeToolStripMenuItem.Text = "Source Code";
-            this.sourceCodeToolStripMenuItem.Click += new System.EventHandler(this.sourceCodeToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -376,13 +377,14 @@
             this.Controls.Add(this.dateSelecter1);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.ToolBar);
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.Name = "Form1";
             this.Text = "時刻表";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.ToolBar.ResumeLayout(false);
+            this.ToolBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -390,7 +392,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip ToolBar;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem 開啟ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem xML格式ToolStripMenuItem;
@@ -419,7 +421,7 @@
         private System.Windows.Forms.MonthCalendar monthCalendar1;
         private System.Windows.Forms.ToolStripMenuItem 儲存ToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem 新建ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton toolStripButton5;
+        private System.Windows.Forms.ToolStripButton DebugMode_;
         private System.Windows.Forms.ToolStripMenuItem 回報BugToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sourceCodeToolStripMenuItem;
     }

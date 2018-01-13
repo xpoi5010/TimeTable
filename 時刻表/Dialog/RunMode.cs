@@ -26,18 +26,20 @@ namespace 時刻表.Dialog
 {
     public partial class RunMode : Form
     {
-        public RunMode(object sender)
+        EventInfo[] LoadEI;
+        public RunMode(object sender,EventInfo[] input)
         {
             InitializeComponent();
             this.sender = sender;
             ni.Icon = this.Icon;
             ni.Visible = true;
             ni.DoubleClick += Ni_DoubleClick;
+            LoadEI = input;
             
         }
         bool fullscreenmode = false;
         object sender;
-        Event[] events;
+       
         public T Test<T>(T[] a)
         {
             return a[0];
@@ -56,18 +58,27 @@ namespace 時刻表.Dialog
 
         bool Enable = false;
         int index = 0;
+        public Event[] events;
+        private Task ts;
         public void Start()
         {
-            events = ((Form1)this.sender).GetAllEvent(DateTime.Now);
+            events = function.GetAllEvent(DateTime.Now,LoadEI);
             Array.ForEach(events, item => listView1.Items.Add(new ListViewItem(new string[] { $"{item.StartTime.ToString("HH:mm")}~{item.StopTime.ToString("HH:mm")}", item.Name })));
             Enable = true;
-            Task ts = new Task(() => Run());
+            ts = new Task(() => Run());
             ts.Start();
         }
         public void Stop()
         {
             Enable = false;
            
+        }
+        ~RunMode()
+        {
+            if (Enable)
+            {
+                Stop();
+            }
         }
         bool Next = false;
         NotifyIcon ni = new NotifyIcon();
@@ -101,7 +112,7 @@ namespace 時刻表.Dialog
                             }
                             else
                             {
-                                Event[] nextdayevent = ((Form1)this.sender).GetAllEvent(events[events.Count() - 1].StopTime);
+                                Event[] nextdayevent = function.GetAllEvent(events[events.Count() - 1].StopTime, LoadEI);
                                 fullScreen.NextEventName = nextdayevent[0].Name;
                             }
                         }
@@ -149,7 +160,7 @@ namespace 時刻表.Dialog
             {
                 ListViewItem templvi = listView1.Items[index];
                 
-                Event[] tempp = ((Form1)this.sender).GetAllEvent(time);
+                Event[] tempp = function.GetAllEvent(time, LoadEI);
                 events = new Event[tempp.Count()+1];
                 Array.Copy(tempp, 0, events, 1, tempp.Count());
                 events[0] = temp_;
@@ -240,7 +251,7 @@ namespace 時刻表.Dialog
             }
             else
             {
-                Event[] nextdayevent = ((Form1)this.sender).GetAllEvent(events[events.Count() - 1].StopTime);
+                Event[] nextdayevent = function.GetAllEvent(events[events.Count() - 1].StopTime, LoadEI);
                 fullScreen.NextEventName = nextdayevent[0].Name;
             }
             fullscreenmode = true;

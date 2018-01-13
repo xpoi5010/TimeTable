@@ -28,103 +28,17 @@ namespace 時刻表
 {
     public partial class Form1 : Form
     {
-        public Form1()
+        public Form1(bool EnterToDebugMode=false,bool EnableLightTheme=false)
         {
             InitializeComponent();
+            DebugMode = EnterToDebugMode;
+            System.Diagnostics.Debug.Print("The Application has entered to DebugMode!");
+            DebugMode_.Visible = DebugMode;
+
         }
+        public bool DebugMode = false;
         string SavePath = "";
-        private delegate Event[] getallevent(DateTime dt);
-        public Event[] GetAllEvent(DateTime dt)
-        {
-            try
-            {
-                if (this.InvokeRequired)
-                {
-                    Delegate delegate_ = new getallevent(GetAllEvent);
-                    return (Event[])this.Invoke(delegate_, new object[] { dt });
-                }
-                else
-                {
-                    Event[] event_ = ToEventArray(dt);
-                    if (event_.Count() > 0)
-                    {
-                        DateTime nextday = dt.AddDays(1);
-                        Event[] NextDatEvent = ToEventArray(nextday);
-                        while (NextDatEvent.Count() < 0)
-                        {
-                            nextday = dt.AddDays(1);
-                            NextDatEvent = ToEventArray(nextday);
-                        }
-                        event_[event_.Count() - 1].StopTime = NextDatEvent[0].StartTime;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                    return event_;
-                }
-            }   
-            catch(Exception ex)
-            {
-                Dialog.ErrorBox errorBox = new Dialog.ErrorBox(0x0001, this, ex);
-                return null;
-            }
-            
-        }
-        private Event[] ToEventArray(DateTime dt)
-        {
-            try
-            {
-                List<Event> list = new List<Event>();
-                DateTime time_ = DateTime.ParseExact(dt.ToString("yyyy,MM,dd"), "yyyy,MM,dd", new System.Globalization.CultureInfo("zh-TW"));
-                dt.AddDays(0 - ((int)dt.DayOfWeek));
-                TimeSpan ts = DateTime.Now - dt;
-                int a = (int)Math.Floor((ts.TotalDays) / 7);
-                int b = 0;
-                Math.DivRem(a, 2, out b);
-                bool week_ = (b == 0);
-                List<Event> output = new List<Event>();
-                int i = 0;
-
-                foreach (ListViewItem lvi in listView1.Items)
-                {
-
-
-                    string[] temp = Array.ConvertAll(lvi.SubItems.Cast<ListViewItem.ListViewSubItem>().ToArray(), ca => ca.Text);
-                    string time = temp[0];
-                    DateTime start = DateTime.ParseExact($"{time_.Year},{time_.Month},{time_.Day}::{time}", "yyyy,M,d::HH:mm", new System.Globalization.CultureInfo("zh-TW"));
-                    time_.AddDays(1);
-                    //Array.ConvertAll((listView1.Items[i + 1]).SubItems.Cast<ListViewItem.ListViewSubItem>().ToArray(), ca => ca.Text)[0]
-                    DateTime stop = new DateTime(9999, 12, 31);
-                    //TEST
-                    if (i + 1 < listView1.Items.Count)
-                    {
-                        string[] temp1 = Array.ConvertAll((listView1.Items[i + 1]).SubItems.Cast<ListViewItem.ListViewSubItem>().ToArray(), ca => ca.Text);
-                        string Event_ = temp[1];
-                        string week1_ = temp[2];
-                        string week2_ = temp[3];
-                        int[] bcc = dowToXMLFormat(System.Text.RegularExpressions.Regex.Split((week_ ? week1_ : week2_), "、"));
-                        stop = DateTime.ParseExact($"{time_.Year},{time_.Month},{time_.Day}::{Array.ConvertAll((listView1.Items[i + 1]).SubItems.Cast<ListViewItem.ListViewSubItem>().ToArray(), ca => ca.Text)[0]}", "yyyy,M,d::HH:mm", new System.Globalization.CultureInfo("zh-TW"));
-                    }
-                    string Event = temp[1];
-                    string week1 = temp[2];
-                    string week2 = temp[3];
-                    int[] bc = dowToXMLFormat(System.Text.RegularExpressions.Regex.Split((week_ ? week1 : week2), "、"));
-                    if (bc.Contains(((int)DateTime.Now.DayOfWeek)))
-                    {
-                        output.Add(new Event(Event, start, stop));
-                    }
-                    i++;
-
-                }
-                return output.ToArray();
-            }
-            catch (Exception ex)
-            {
-                Dialog.ErrorBox errorBox = new Dialog.ErrorBox(0x0002, this, ex);
-                return null;
-            }
-        }
+        public EventInfo[] now_load_event=new EventInfo[] { };
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             try
@@ -174,7 +88,7 @@ namespace 時刻表
                             toolStripButton4.CheckState = (run ? CheckState.Unchecked : CheckState.Checked);
                             toolStripButton3.CheckState = (run ? CheckState.Checked : CheckState.Unchecked);
                             run = !run;
-                            Dialog.RunMode rm = new Dialog.RunMode(this);
+                            Dialog.RunMode rm = new Dialog.RunMode(this,now_load_event);
                             DateTime dt = DateTime.ParseExact($@"{dateSelecter1.Year.ToString().PadLeft(4, '0')},{dateSelecter1.Month.ToString().PadLeft(2, '0')},{dateSelecter1.Day.ToString().PadLeft(2, '0')}", "yyyy,MM,dd", new System.Globalization.CultureInfo("zh-TW"));
                             dt.AddDays(0 - ((int)dt.DayOfWeek));
                             TimeSpan ts = DateTime.Now - dt;
@@ -478,6 +392,107 @@ namespace 時刻表
             dateSelecter1.Month = DateTime.Now.Month;
             dateSelecter1.Day = DateTime.Now.Day;
         }
+        //Add:1.0.1.0
+        public EventInfo[] LoadXML(string path)
+        {
+            System.Xml.XmlDocument xd = new System.Xml.XmlDocument();
+            SavePath = path;
+            xd.Load(SavePath);
+            System.Xml.XmlNodeReader xnr = new System.Xml.XmlNodeReader(xd);
+            string Time = "";
+            string element = "";
+            bool IsEvent = false;
+            EventInfo temp = new EventInfo();
+            string start = "";
+            string week = "";
+            List<EventInfo> output = new List<EventInfo>();
+            while (xnr.Read())
+            {
+                switch (xnr.NodeType)
+                {
+                    case (XmlNodeType.Element):
+                        element = xnr.Name;
+                        switch (element)
+                        {
+                            case ("Timetable"):
+                                start = xnr.GetAttribute("start");
+                                string[] split = System.Text.RegularExpressions.Regex.Split(start, ",");
+                                dateSelecter1.Year = Convert.ToInt32(split[0]);
+                                dateSelecter1.Month = Convert.ToInt32(split[1]);
+                                dateSelecter1.Day = Convert.ToInt32(split[2]);
+                                break;
+
+                            case ("Event"):
+                                IsEvent = true;
+                                week = "";
+                                start = "";
+                                temp = new EventInfo();
+                                break;
+                            case ("Time"):
+                                Time = xnr.GetAttribute("time");
+                                break;
+                            case ("Repeat"):
+                                week = xnr.GetAttribute("week");
+
+                                break;
+                        }
+                        break;
+                    case (XmlNodeType.Text):
+                        if (IsEvent)
+                        {
+                            if (element == "Name")
+                            {
+                                temp.starttime = new Time(Time);
+                                temp.EventName = xnr.Value;
+                            }
+                            else if (element == "Repeat")
+                            {
+                                string[] Split = System.Text.RegularExpressions.Regex.Split(xnr.Value, ":");
+                                int[] w_ = Array.ConvertAll(Split, item => Convert.ToInt32(item));
+                                if (week == "" || week == null)
+                                {
+                                    temp.Repeat_OneWeek = w_;
+                                    temp.Repeat_Biweekly = temp.Repeat_OneWeek;
+                                }
+                                if (week == "1")
+                                {
+                                    temp.Repeat_OneWeek = w_;
+                                }
+                                if (week == "2")
+                                {
+                                    temp.Repeat_Biweekly = w_;
+                                }
+                            }
+                        }
+                        break;
+                    case (XmlNodeType.EndElement):
+                        switch (xnr.Name)
+                        {
+                            case ("Event"):
+                                IsEvent = false;
+                                output.Add(temp);
+                                temp = new EventInfo();
+                                break;
+                        }
+                        break;
+
+                }
+            }
+            xnr.Close();
+            return output.ToArray();
+        }
+        public void Apply()
+        {
+            foreach(EventInfo ei in now_load_event)
+            {
+                string[] o = Array.ConvertAll(ei.Repeat_OneWeek, x => DayOfWeekChinese[x]);
+                string[] b = Array.ConvertAll(ei.Repeat_Biweekly, x => DayOfWeekChinese[x]);
+                ListViewItem lvi = new ListViewItem(new string[] { ei.starttime.ToString(), ei.EventName, string.Join("、", o) , string.Join("、", b) });
+                listView1.Items.Add(lvi);
+            }
+        }
+        //1.0.1.0 has been changed
+        
         private void xML格式ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (Changed)
@@ -508,90 +523,10 @@ namespace 時刻表
                 OpenFileDialog ofd = new OpenFileDialog() { Filter="XML檔案|*.xml"};
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    System.Xml.XmlDocument xd = new System.Xml.XmlDocument();
-                    SavePath = ofd.FileName;
-                    xd.Load(SavePath);
-                    System.Xml.XmlNodeReader xnr = new System.Xml.XmlNodeReader(xd);
-                    string Time = "";
-                    string element = "";
-                    bool IsEvent = false;
-                    string[] temp = new string[4];
-                    string start = "";
-                    string week = "";
-                    while (xnr.Read())
-                    {
-                        switch (xnr.NodeType)
-                        {
-                            case (XmlNodeType.Element):
-                                element = xnr.Name;
-                                switch(element)
-                                {
-                                   case ("Timetable"):
-                                        start = xnr.GetAttribute("start");
-                                        string[] split = System.Text.RegularExpressions.Regex.Split(start, ",");
-                                        dateSelecter1.Year = Convert.ToInt32(split[0]);
-                                        dateSelecter1.Month = Convert.ToInt32(split[1]);
-                                        dateSelecter1.Day = Convert.ToInt32(split[2]);
-                                        break;
+                    //new 
+                    now_load_event= LoadXML(ofd.FileName);
+                    Apply();
 
-                                   case ("Event"):
-                                        IsEvent = true;
-                                        week = "";
-                                        start = "";
-                                        temp = new string[4];
-                                        break;
-                                    case ("Time"):
-                                        Time = xnr.GetAttribute("time");
-                                        break;
-                                    case ("Repeat"):
-                                        week = xnr.GetAttribute("week");
-
-                                        break;
-                                }
-                                break;
-                            case (XmlNodeType.Text):
-                                if(IsEvent)
-                                {
-                                    if (element == "Name")
-                                    {
-                                        temp[0] = Time;
-                                        temp[1] = xnr.Value;
-                                    }
-                                    else if(element == "Repeat")
-                                    {
-                                        string[] Split = System.Text.RegularExpressions.Regex.Split(xnr.Value, ":");
-                                        int[] w_ = Array.ConvertAll(Split, item => Convert.ToInt32(item));
-                                        if (week == "" || week == null)
-                                        {
-                                            temp[2] = String.Join("、",Array.ConvertAll(w_, item => DayOfWeekChinese[item]));
-                                            temp[3] = temp[2];
-                                        }
-                                        if(week=="1")
-                                        {
-                                            temp[2] = String.Join("、", Array.ConvertAll(w_, item => DayOfWeekChinese[item]));
-                                        }
-                                        if (week == "2")
-                                        {
-                                            temp[3] = String.Join("、", Array.ConvertAll(w_, item => DayOfWeekChinese[item]));
-                                        }
-                                    }
-                                }
-                                break;
-                            case (XmlNodeType.EndElement):
-                                switch (xnr.Name)
-                                {
-                                    case ("Event"):
-                                        IsEvent = false;
-                                        ListViewItem lvi = new ListViewItem(temp);
-                                        listView1.Items.Add(lvi);
-                                        temp = new string[4];
-                                        break;
-                                }
-                                break;
-                                
-                        }
-                    }
-                    xnr.Close();
                 }
             }
 
@@ -611,8 +546,8 @@ namespace 時刻表
         }
         private void toolStripButton5_Click(object sender, EventArgs e)
         {
-            
-            
+            Event[] test = function.GetAllEvent(DateTime.Now, now_load_event);
+            Debug.Print("test642");
         }
 
         private void 關於本程式ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -636,6 +571,11 @@ namespace 時刻表
         private void sourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
         }
     }
 }

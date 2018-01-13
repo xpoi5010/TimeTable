@@ -29,13 +29,14 @@ namespace 時刻表.Dialog
         public About()
         {
             InitializeComponent();
-            ver.Text = $@"版本:{Application.ProductVersion}";
-            ver.Location = new Point(this.Width - ver.Size.Width , 3);
+            
         }
 
         private void Help_Load(object sender, EventArgs e)
         {
-
+            ver.Text = $@"版本:{Application.ProductVersion}";
+            ver.AutoSize = true;
+            ver.Location = new Point(this.Width - ver.Size.Width - 20, 3);
         }
     }
 }
