@@ -1,5 +1,5 @@
 ﻿/*
- *  This program is free software: you can redistribute it and/or modify
+    This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -22,19 +22,19 @@ namespace 時刻表
 {
     public static class function
     {
-        public static Event[] GetAllEvent(DateTime dt,EventInfo[] input)
+        public static Event[] GetAllEvent(DateTime dt,EventInfo[] input,DateTime StartTime)
         {
            
                 
-                    Event[] event_ = ToEventArray(dt, input);
+                    Event[] event_ = ToEventArray(dt, input, StartTime);
                     if (event_.Count() > 0)
                     {
                         DateTime nextday = dt.AddDays(1);
-                        Event[] NextDatEvent = ToEventArray(nextday, input);
+                        Event[] NextDatEvent = ToEventArray(nextday, input, StartTime);
                         while (NextDatEvent.Count() < 0)
                         {
                             nextday = dt.AddDays(1);
-                            NextDatEvent = ToEventArray(nextday, input);
+                            NextDatEvent = ToEventArray(nextday, input, StartTime);
                         }
                         event_[event_.Count() - 1].StopTime = NextDatEvent[0].StartTime;
                     }
@@ -46,7 +46,49 @@ namespace 時刻表
                 
 
         }
-        private static Event[] ToEventArray(DateTime dt,EventInfo[] input)
+        private static Event[] ToEventArray(DateTime dt, EventInfo[] input,DateTime StartTime)
+        {
+            TimeSpan ts = StartTime - dt;
+            int Days = ts.Days;
+            int a = 0;
+            int Weeks = Math.DivRem(Days, 7,out a)+1;
+            bool IsBiweekly = Math.IEEERemainder(Weeks, 2) == 0;
+            EventInfo[] ei = Separate(input, dt.DayOfWeek, IsBiweekly);
+            List<Event> output = new List<Event>();
+            for(int i = 0; i < ei.Count(); i++)
+            {
+                Event temp = new Event();
+                DateTime time_ = dt;
+                temp.Name = ei[i].EventName;
+                temp.StartTime = DateTime.ParseExact($"{time_.Year},{time_.Month},{time_.Day}::{ei[i].starttime.ToString()}", "yyyy,M,d::HH:mm", new System.Globalization.CultureInfo("zh-TW"));
+                if (i < ei.Count() - 1)
+                {
+                    temp.StopTime = DateTime.ParseExact($"{time_.Year},{time_.Month},{time_.Day}::{ei[i + 1].starttime.ToString()}", "yyyy,M,d::HH:mm", new System.Globalization.CultureInfo("zh-TW"));
+                }
+                else
+                {
+                    temp.StopTime = new DateTime(9999, 12, 31);
+                }
+                output.Add(temp);
+            }
+            return output.ToArray();
+        }
+        private static EventInfo[] Separate(EventInfo[] input,DayOfWeek week,bool IsBiweekly)
+        {
+            List<EventInfo> output = new List<EventInfo>();
+            EventInfo[] items = input;
+            foreach(EventInfo item in items)
+            {
+                int[] Repeat = IsBiweekly ? item.Repeat_Biweekly : item.Repeat_OneWeek;
+                if (Repeat.Contains((int)week))
+                {
+                    output.Add(item);
+                }
+            }
+            return output.ToArray();
+        }
+        //old
+        private static Event[] ToEventArray_old(DateTime dt,EventInfo[] input)
         {
 
             List<Event> list = new List<Event>();
@@ -189,6 +231,10 @@ namespace 時刻表
         public new string ToString()
         {
             return $@"{Hours.ToString().PadLeft(2,'0')}:{Minutes.ToString().PadLeft(2, '0')}";
+        }
+        public DateTime ToDateTime()
+        {
+            return new DateTime(2000, Hours, Minutes);
         }
     }
 }

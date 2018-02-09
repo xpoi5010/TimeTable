@@ -27,7 +27,8 @@ namespace 時刻表.Dialog
     public partial class RunMode : Form
     {
         EventInfo[] LoadEI;
-        public RunMode(object sender,EventInfo[] input)
+        DateTime StartDoingTime;
+        public RunMode(object sender,EventInfo[] input,DateTime StartTime)
         {
             InitializeComponent();
             this.sender = sender;
@@ -35,7 +36,7 @@ namespace 時刻表.Dialog
             ni.Visible = true;
             ni.DoubleClick += Ni_DoubleClick;
             LoadEI = input;
-            
+            StartDoingTime = StartTime;
         }
         bool fullscreenmode = false;
         object sender;
@@ -62,7 +63,7 @@ namespace 時刻表.Dialog
         private Task ts;
         public void Start()
         {
-            events = function.GetAllEvent(DateTime.Now,LoadEI);
+            events = function.GetAllEvent(DateTime.Now,LoadEI, StartDoingTime);
             Array.ForEach(events, item => listView1.Items.Add(new ListViewItem(new string[] { $"{item.StartTime.ToString("HH:mm")}~{item.StopTime.ToString("HH:mm")}", item.Name })));
             Enable = true;
             ts = new Task(() => Run());
@@ -71,7 +72,7 @@ namespace 時刻表.Dialog
         public void Stop()
         {
             Enable = false;
-           
+            ts.GetAwaiter();
         }
         ~RunMode()
         {
@@ -112,7 +113,7 @@ namespace 時刻表.Dialog
                             }
                             else
                             {
-                                Event[] nextdayevent = function.GetAllEvent(events[events.Count() - 1].StopTime, LoadEI);
+                                Event[] nextdayevent = function.GetAllEvent(events[events.Count() - 1].StopTime, LoadEI, StartDoingTime);
                                 fullScreen.NextEventName = nextdayevent[0].Name;
                             }
                         }
@@ -160,7 +161,7 @@ namespace 時刻表.Dialog
             {
                 ListViewItem templvi = listView1.Items[index];
                 
-                Event[] tempp = function.GetAllEvent(time, LoadEI);
+                Event[] tempp = function.GetAllEvent(time, LoadEI, StartDoingTime);
                 events = new Event[tempp.Count()+1];
                 Array.Copy(tempp, 0, events, 1, tempp.Count());
                 events[0] = temp_;
@@ -251,7 +252,7 @@ namespace 時刻表.Dialog
             }
             else
             {
-                Event[] nextdayevent = function.GetAllEvent(events[events.Count() - 1].StopTime, LoadEI);
+                Event[] nextdayevent = function.GetAllEvent(events[events.Count() - 1].StopTime, LoadEI, StartDoingTime);
                 fullScreen.NextEventName = nextdayevent[0].Name;
             }
             fullscreenmode = true;

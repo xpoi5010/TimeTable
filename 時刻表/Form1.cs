@@ -88,7 +88,7 @@ namespace 時刻表
                             toolStripButton4.CheckState = (run ? CheckState.Unchecked : CheckState.Checked);
                             toolStripButton3.CheckState = (run ? CheckState.Checked : CheckState.Unchecked);
                             run = !run;
-                            Dialog.RunMode rm = new Dialog.RunMode(this,now_load_event);
+                            Dialog.RunMode rm = new Dialog.RunMode(this,now_load_event,new DateTime(dateSelecter1.Year,dateSelecter1.Month,dateSelecter1.Day));
                             DateTime dt = DateTime.ParseExact($@"{dateSelecter1.Year.ToString().PadLeft(4, '0')},{dateSelecter1.Month.ToString().PadLeft(2, '0')},{dateSelecter1.Day.ToString().PadLeft(2, '0')}", "yyyy,MM,dd", new System.Globalization.CultureInfo("zh-TW"));
                             dt.AddDays(0 - ((int)dt.DayOfWeek));
                             TimeSpan ts = DateTime.Now - dt;
@@ -546,7 +546,7 @@ namespace 時刻表
         }
         private void toolStripButton5_Click(object sender, EventArgs e)
         {
-            Event[] test = function.GetAllEvent(DateTime.Now, now_load_event);
+            Event[] test = function.GetAllEvent(DateTime.Now, now_load_event, new DateTime(dateSelecter1.Year, dateSelecter1.Month, dateSelecter1.Day));
             Debug.Print("test642");
         }
 
@@ -565,12 +565,13 @@ namespace 時刻表
         private void 回報BugToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process process = new Process();
-            process.StartInfo.FileName = "http://app.yuanstudio.cc/report";
+            process.StartInfo.FileName = "https://docs.google.com/forms/d/171kuyGCDmieOHDWV_dQTBGip4ab-1JbhRppKj98qvFk/edit";
         }
 
         private void sourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            Process process = new Process();
+            process.StartInfo.FileName = "https://github.com/xpoi5010/TimeTable/tree/master/%E6%99%82%E5%88%BB%E8%A1%A8";
         }
 
         private void Form1_Load(object sender, EventArgs e)
