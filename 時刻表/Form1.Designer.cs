@@ -253,7 +253,6 @@
             this.使用手冊ToolStripMenuItem.Name = "使用手冊ToolStripMenuItem";
             this.使用手冊ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.使用手冊ToolStripMenuItem.Text = "使用手冊";
-            this.使用手冊ToolStripMenuItem.Visible = false;
             this.使用手冊ToolStripMenuItem.Click += new System.EventHandler(this.使用手冊ToolStripMenuItem_Click);
             // 
             // 關於本程式ToolStripMenuItem
@@ -268,7 +267,6 @@
             this.回報BugToolStripMenuItem.Name = "回報BugToolStripMenuItem";
             this.回報BugToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.回報BugToolStripMenuItem.Text = "回報Bug";
-            this.回報BugToolStripMenuItem.Visible = false;
             this.回報BugToolStripMenuItem.Click += new System.EventHandler(this.回報BugToolStripMenuItem_Click);
             // 
             // sourceCodeToolStripMenuItem
@@ -293,7 +291,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label1.Font = new System.Drawing.Font("Microsoft JhengHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label1.Location = new System.Drawing.Point(12, 32);
             this.label1.Name = "label1";
@@ -309,7 +307,7 @@
             this.columnHeader2,
             this.columnHeader3,
             this.columnHeader4});
-            this.listView1.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.listView1.Font = new System.Drawing.Font("Microsoft JhengHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.listView1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.listView1.Location = new System.Drawing.Point(15, 51);
             this.listView1.Name = "listView1";
@@ -355,7 +353,7 @@
             this.dateSelecter1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.dateSelecter1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.dateSelecter1.Day = 31;
-            this.dateSelecter1.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.dateSelecter1.Font = new System.Drawing.Font("Microsoft JhengHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.dateSelecter1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.dateSelecter1.Location = new System.Drawing.Point(132, 27);
             this.dateSelecter1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -383,6 +381,7 @@
             this.Text = "時刻表";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
             this.ToolBar.ResumeLayout(false);
             this.ToolBar.PerformLayout();
             this.ResumeLayout(false);

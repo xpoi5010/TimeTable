@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // 變更這些屬性的值即可修改組件的相關
 // 資訊。
 [assembly: AssemblyTitle("時刻表")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("可以安排你一日的行程")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("YuanStudio")]
 [assembly: AssemblyProduct("時刻表")]
-[assembly: AssemblyCopyright("YuanStudio Copyleft ©  2017")]
+[assembly: AssemblyCopyright("YuanStudio Copyleft  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，或將組建編號或修訂編號設為預設值
 // 指定為預設值: 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.2.3")]
-[assembly: AssemblyFileVersion("1.0.2.3")]
+[assembly: AssemblyVersion("1.0.2.9")]
+[assembly: AssemblyFileVersion("1.0.2.9")]

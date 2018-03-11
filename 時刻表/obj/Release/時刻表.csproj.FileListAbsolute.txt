@@ -49,3 +49,6 @@ E:\電腦研究\程式設計\2017年總開發\2017.09月程式開發\時刻表\�
 E:\電腦研究\程式設計\2017年總開發\2017.09月程式開發\時刻表\時刻表\obj\Release\時刻表.csproj.CoreCompileInputs.cache
 E:\電腦研究\程式設計\2017年總開發\2017.09月程式開發\時刻表\時刻表\obj\Release\時刻表.exe
 E:\電腦研究\程式設計\2017年總開發\2017.09月程式開發\時刻表\時刻表\obj\Release\時刻表.pdb
+C:\Users\xpoi5\OneDrive\文件\yuanapplication\file\時刻表.exe.config
+C:\Users\xpoi5\OneDrive\文件\yuanapplication\file\時刻表.exe
+C:\Users\xpoi5\OneDrive\文件\yuanapplication\file\時刻表.pdb

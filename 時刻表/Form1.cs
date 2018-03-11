@@ -88,6 +88,7 @@ namespace 時刻表
                             toolStripButton4.CheckState = (run ? CheckState.Unchecked : CheckState.Checked);
                             toolStripButton3.CheckState = (run ? CheckState.Checked : CheckState.Unchecked);
                             run = !run;
+                            now_load_event = Output();
                             Dialog.RunMode rm = new Dialog.RunMode(this,now_load_event,new DateTime(dateSelecter1.Year,dateSelecter1.Month,dateSelecter1.Day));
                             DateTime dt = DateTime.ParseExact($@"{dateSelecter1.Year.ToString().PadLeft(4, '0')},{dateSelecter1.Month.ToString().PadLeft(2, '0')},{dateSelecter1.Day.ToString().PadLeft(2, '0')}", "yyyy,MM,dd", new System.Globalization.CultureInfo("zh-TW"));
                             dt.AddDays(0 - ((int)dt.DayOfWeek));
@@ -353,6 +354,7 @@ namespace 時刻表
             {
                 SavePath = sfd.FileName;
                 SaveXML(SavePath);
+                Changed = false;
             }
         }
 
@@ -391,6 +393,7 @@ namespace 時刻表
             dateSelecter1.Year = DateTime.Now.Year;
             dateSelecter1.Month = DateTime.Now.Month;
             dateSelecter1.Day = DateTime.Now.Day;
+            now_load_event = new EventInfo[] { };
         }
         //Add:1.0.1.0
         public EventInfo[] LoadXML(string path)
@@ -546,8 +549,10 @@ namespace 時刻表
         }
         private void toolStripButton5_Click(object sender, EventArgs e)
         {
-            Event[] test = function.GetAllEvent(DateTime.Now, now_load_event, new DateTime(dateSelecter1.Year, dateSelecter1.Month, dateSelecter1.Day));
-            Debug.Print("test642");
+            MessageBox.Show("DebugMode has been closed.","DebugMode",MessageBoxButtons.OK,MessageBoxIcon.Error);
+            //Output();
+            //Event[] test = function.GetAllEvent(DateTime.Now, now_load_event, new DateTime(dateSelecter1.Year, dateSelecter1.Month, dateSelecter1.Day));
+            //Debug.Print("test642");
         }
 
         private void 關於本程式ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -558,25 +563,51 @@ namespace 時刻表
 
         private void 使用手冊ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+           
             Process process = new Process();
-            process.StartInfo.FileName = "http://app.yuanstudio.cc/help";
+            process.StartInfo.FileName = "https://1drv.ms/p/s!AqtQVHlgMRovgZABCKN0CG6saqJjXQ";
+            process.Start();
         }
 
         private void 回報BugToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process process = new Process();
             process.StartInfo.FileName = "https://docs.google.com/forms/d/171kuyGCDmieOHDWV_dQTBGip4ab-1JbhRppKj98qvFk/edit";
+            process.Start();
         }
 
         private void sourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process process = new Process();
             process.StartInfo.FileName = "https://github.com/xpoi5010/TimeTable/tree/master/%E6%99%82%E5%88%BB%E8%A1%A8";
+            process.Start();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private EventInfo[] Output()
+        {
+            List<EventInfo> list = new List<EventInfo>();
+            foreach(ListViewItem lvi in this.listView1.Items)
+            {
+                string[] a = Array.ConvertAll(lvi.SubItems.Cast<ListViewItem.ListViewSubItem>().ToArray(), x => x.Text);
+                string time = a[0];
+                string Name = a[1];
+                string _ = a[2];
+                string __ = a[3];
+                int[] _int = Array.ConvertAll(System.Text.RegularExpressions.Regex.Split(_, "、"), x => Array.IndexOf(DayOfWeekChinese, x));
+                int[] __int = Array.ConvertAll(System.Text.RegularExpressions.Regex.Split(__, "、"), x => Array.IndexOf(DayOfWeekChinese, x));
+                list.Add(new EventInfo(Name, _int, __int, new Time(time)));
+            }
+            return list.ToArray();
         }
     }
 }

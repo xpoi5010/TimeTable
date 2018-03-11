@@ -87,7 +87,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(20, 16);
             this.label5.TabIndex = 5;
-            this.label5.Text = "月";
+            this.label5.Text = "日";
             // 
             // day
             // 
@@ -163,7 +163,7 @@
             this.Controls.Add(this.month);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.year);
-            this.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.Font = new System.Drawing.Font("Microsoft JhengHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "DateSelecter";
