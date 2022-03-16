@@ -3,7 +3,7 @@
 ## Download
 [Download](https://github.com/xpoi5010/TimeTable/releases/download/1.0.2.9/Timespan.exe)
 ## Others
-[Official Website](https://app.yuanstudio.cc)
+[Official Website](https://app.epstudio.cc)
 
 
 
